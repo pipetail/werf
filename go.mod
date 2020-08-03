@@ -12,9 +12,6 @@ require (
 	github.com/Masterminds/goutils v1.1.0
 	github.com/Masterminds/semver v1.5.0
 	github.com/Masterminds/sprig v2.20.0+incompatible
-	github.com/Masterminds/vcs v1.11.1 // indirect
-	github.com/Microsoft/go-winio v0.4.14 // indirect
-	github.com/Microsoft/hcsshim v0.8.6 // indirect
 	github.com/Rican7/retry v0.1.0 // indirect
 	github.com/Shopify/logrus-bugsnag v0.0.0-20171204204709-577dee27f20d // indirect
 	github.com/agl/ed25519 v0.0.0-20170116200512-5312a6153412 // indirect
@@ -37,10 +34,7 @@ require (
 	github.com/clusterhq/flocker-go v0.0.0-20160920122132-2b8b7259d313 // indirect
 	github.com/codegangsta/negroni v1.0.0 // indirect
 	github.com/container-storage-interface/spec v1.2.0 // indirect
-	github.com/containerd/cgroups v0.0.0-20181219155423-39b18af02c41 // indirect
 	github.com/containerd/console v0.0.0-20181022165439-0650fd9eeb50 // indirect
-	github.com/containerd/containerd v1.3.0 // indirect
-	github.com/containerd/continuity v0.0.0-20190827140505-75bee3e2ccb6 // indirect
 	github.com/containerd/cri v1.11.1 // indirect
 	github.com/containerd/fifo v0.0.0-20200410184934-f15a3290365b // indirect
 	github.com/containerd/typeurl v1.0.1 // indirect
@@ -51,10 +45,10 @@ require (
 	github.com/cyphar/filepath-securejoin v0.2.2 // indirect
 	github.com/daviddengcn/go-colortext v0.0.0-20160507010035-511bcaf42ccd // indirect
 	github.com/dnaeon/go-vcr v1.0.1 // indirect
-	github.com/docker/cli v0.0.0-20191017083524-a8ff7f821017
+	github.com/docker/cli v0.0.0-20200130152716-5d0cf8839492
 	github.com/docker/compose-on-kubernetes v0.4.24 // indirect
 	github.com/docker/distribution v2.7.1+incompatible // indirect
-	github.com/docker/docker v1.4.2-0.20190924003213-a8608b5b67c7
+	github.com/docker/docker v1.4.2-0.20200203170920-46ec8731fbce
 	github.com/docker/docker-credential-helpers v0.6.3 // indirect
 	github.com/docker/go v1.5.1-1 // indirect
 	github.com/docker/go-connections v0.4.0
@@ -77,7 +71,6 @@ require (
 	github.com/go-ozzo/ozzo-validation v3.5.0+incompatible // indirect
 	github.com/gobuffalo/packr v1.30.1 // indirect
 	github.com/gobwas/glob v0.2.3 // indirect
-	github.com/godbus/dbus v0.0.0-20181101234600-2ff6f7ffd60f // indirect
 	github.com/gofrs/uuid v3.3.0+incompatible // indirect
 	github.com/gogo/googleapis v1.4.0 // indirect
 	github.com/golang/example v0.0.0-20170904185048-46695d81d1fa
@@ -89,7 +82,7 @@ require (
 	github.com/google/shlex v0.0.0-20150127133951-6f45313302b9 // indirect
 	github.com/google/uuid v1.1.1
 	github.com/googleapis/gnostic v0.2.2 // indirect
-	github.com/gosuri/uitable v0.0.0-20160404203958-36ee7e946282
+	github.com/gosuri/uitable v0.0.4
 	github.com/grpc-ecosystem/grpc-opentracing v0.0.0-20180507213350-8e809c8a8645 // indirect
 	github.com/hailocab/go-hostpool v0.0.0-20160125115350-e80d13ce29ed // indirect
 	github.com/hashicorp/go-version v1.2.0
@@ -163,7 +156,6 @@ require (
 	github.com/werf/logboek v0.3.5-0.20200608145450-5b5f18fe7009
 	github.com/xeipuuv/gojsonpointer v0.0.0-20190809123943-df4f5c81cb3b // indirect
 	github.com/xeipuuv/gojsonreference v0.0.0-20180127040603-bd5ef7bd5415 // indirect
-	github.com/xeipuuv/gojsonschema v0.0.0-20170512152554-8a8cc2c7e54a // indirect
 	github.com/xlab/handysort v0.0.0-20150421192137-fb3537ed64a1 // indirect
 	github.com/ziutek/mymysql v1.5.4 // indirect
 	go.mongodb.org/mongo-driver v1.1.2 // indirect
@@ -181,6 +173,7 @@ require (
 	gopkg.in/yaml.v2 v2.3.0
 	gopkg.in/yaml.v3 v3.0.0-20200121175148-a6ecf24a6d71 // indirect
 	gotest.tools/gotestsum v0.3.5 // indirect
+	helm.sh/helm/v3 v3.2.4 // indirect
 	k8s.io/api v0.18.6
 	k8s.io/apimachinery v0.18.6
 	k8s.io/cli-runtime v0.18.6
@@ -266,3 +259,4 @@ replace golang.org/x/sys => golang.org/x/sys v0.0.0-20190813064441-fde4db37ae7a
 go 1.14
 
 replace k8s.io/helm => github.com/werf/helm v0.0.0-20200729113816-b42ef1ec3fd7
+replace helm.sh/helm/v3 => ../helm
