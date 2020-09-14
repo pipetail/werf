@@ -12,6 +12,7 @@ import (
 	"github.com/werf/werf/pkg/image"
 	"github.com/werf/werf/pkg/logging"
 	"github.com/werf/werf/pkg/storage"
+	"github.com/werf/werf/pkg/util/parallel"
 )
 
 type ImagesPurgeOptions struct {
@@ -80,20 +81,26 @@ func selectRepoImagesFromImagesRepo(ctx context.Context, imagesRepo storage.Imag
 }
 
 func deleteRepoImageInImagesRepo(ctx context.Context, imagesRepo storage.ImagesRepo, dryRun bool, repoImageList ...*image.Info) error {
-	for _, repoImage := range repoImageList {
+	return parallel.DoTasks(ctx, len(repoImageList), parallel.DoTasksOptions{
+		InitDockerCLIForEachWorker: false,
+		MaxNumberOfWorkers:                20,
+		IsLiveOutputOn:               false,
+	}, func(ctx context.Context, taskId int) error {
+		repoImage := repoImageList[taskId]
+
 		if !dryRun {
 			if err := imagesRepo.DeleteRepoImage(ctx, storage.DeleteImageOptions{}, repoImage); err != nil {
 				if err := handleDeleteStageOrImageError(ctx, err, repoImage.Name); err != nil {
 					return err
 				}
 
-				continue
+				return nil
 			}
 		}
 
 		logboek.Context(ctx).Default().LogFDetails("  tag: %s\n", repoImage.Tag)
 		logboek.Context(ctx).LogOptionalLn()
-	}
 
-	return nil
+		return nil
+	})
 }

@@ -16,6 +16,7 @@ import (
 	"github.com/werf/werf/pkg/image"
 	"github.com/werf/werf/pkg/stages_manager"
 	"github.com/werf/werf/pkg/storage"
+	"github.com/werf/werf/pkg/util/parallel"
 	"github.com/werf/werf/pkg/werf"
 )
 
@@ -220,22 +221,28 @@ func flattenRepoImages(repoImages map[string][]*image.Info) (repoImageList []*im
 }
 
 func deleteStageInStagesStorage(ctx context.Context, stagesManager *stages_manager.StagesManager, options storage.DeleteImageOptions, dryRun bool, stages ...*image.StageDescription) error {
-	for _, stageDesc := range stages {
+	return parallel.DoTasks(ctx, len(stages), parallel.DoTasksOptions{
+		InitDockerCLIForEachWorker: !dryRun,
+		MaxNumberOfWorkers:                20,
+		IsLiveOutputOn:               false,
+	}, func(ctx context.Context, taskId int) error {
+		stageDesc := stages[taskId]
+
 		if !dryRun {
 			if err := stagesManager.DeleteStages(ctx, options, stageDesc); err != nil {
 				if err := handleDeleteStageOrImageError(ctx, err, stageDesc.Info.Name); err != nil {
 					return err
 				}
 
-				continue
+				return nil
 			}
 		}
 
 		logboek.Context(ctx).Default().LogFDetails("  tag: %s\n", stageDesc.Info.Tag)
 		logboek.Context(ctx).LogOptionalLn()
-	}
 
-	return nil
+		return nil
+	})
 }
 
 func handleDeleteStageOrImageError(ctx context.Context, err error, imageName string) error {

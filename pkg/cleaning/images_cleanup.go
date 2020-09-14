@@ -7,8 +7,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/werf/kubedog/pkg/kube"
-
 	"github.com/fatih/color"
 	"github.com/rodaine/table"
 
@@ -18,6 +16,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 
+	"github.com/werf/kubedog/pkg/kube"
 	"github.com/werf/lockgate"
 	"github.com/werf/logboek"
 	"github.com/werf/logboek/pkg/style"
@@ -30,6 +29,7 @@ import (
 	"github.com/werf/werf/pkg/stages_manager"
 	"github.com/werf/werf/pkg/storage"
 	"github.com/werf/werf/pkg/tag_strategy"
+	"github.com/werf/werf/pkg/util/parallel"
 	"github.com/werf/werf/pkg/werf"
 )
 
@@ -1186,7 +1186,13 @@ func getJobsImages(kubernetesClient kubernetes.Interface, kubernetesNamespace st
 }
 
 func deleteMetaImagesInStagesStorage(ctx context.Context, stagesStorage storage.StagesStorage, projectName, imageName string, dryRun bool, commitHashes ...plumbing.Hash) error {
-	for _, commitHash := range commitHashes {
+	return parallel.DoTasks(ctx, len(commitHashes), parallel.DoTasksOptions{
+		InitDockerCLIForEachWorker: false,
+		MaxNumberOfWorkers:                20,
+		IsLiveOutputOn:               false,
+	}, func(ctx context.Context, taskId int) error {
+		commitHash := commitHashes[taskId]
+
 		if dryRun {
 			logboek.Context(ctx).Info().LogLn(commitHash)
 		} else {
@@ -1198,7 +1204,7 @@ func deleteMetaImagesInStagesStorage(ctx context.Context, stagesStorage storage.
 				logboek.Context(ctx).LogOptionalLn()
 			}
 		}
-	}
 
-	return nil
+		return nil
+	})
 }
