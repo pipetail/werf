@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"sort"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/fatih/color"
@@ -160,21 +161,37 @@ func (m *imagesCleanupManager) initRepoImages(ctx context.Context) error {
 func (m *imagesCleanupManager) initImageCommitHashImageMetadata(ctx context.Context) error {
 	imageCommitImageMetadata := map[string]map[plumbing.Hash]*storage.ImageMetadata{}
 	for _, imageName := range m.ImageNameList {
+		imageName := imageName
+
 		commits, err := m.StagesManager.StagesStorage.GetImageCommits(ctx, m.ProjectName, imageName)
 		if err != nil {
 			return fmt.Errorf("get image %s commits failed: %s", imageName, err)
 		}
 
+		var mutex sync.Mutex
 		commitImageMetadata := map[plumbing.Hash]*storage.ImageMetadata{}
-		for _, commit := range commits {
+		if err := parallel.DoTasks(ctx, len(commits), parallel.DoTasksOptions{
+			InitDockerCLIForEachWorker: false,
+			MaxNumberOfWorkers:         0,
+			IsLiveOutputOn:             false,
+		}, func(ctx context.Context, taskId int) error {
+			commit := commits[taskId]
+
 			imageMetadata, err := m.StagesManager.StagesStorage.GetImageMetadataByCommit(ctx, m.ProjectName, imageName, commit)
 			if err != nil {
 				return fmt.Errorf("get image %s metadata by commit %s failed", imageName, commit)
 			}
 
 			if imageMetadata != nil {
+				mutex.Lock()
+				defer mutex.Unlock()
+
 				commitImageMetadata[plumbing.NewHash(commit)] = imageMetadata
 			}
+
+			return nil
+		}); err != nil {
+			return err
 		}
 
 		imageCommitImageMetadata[imageName] = commitImageMetadata
