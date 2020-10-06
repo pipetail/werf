@@ -21,8 +21,8 @@ type Interface interface {
 
 	PreRunHook(context.Context, Conveyor) error
 
-	SetSignature(signature string)
-	GetSignature() string
+	SetDependenciesDigest(dependenciesDigest string)
+	GetDependenciesDigest() string
 
 	SetDigest(digest string)
 	GetDigest() string

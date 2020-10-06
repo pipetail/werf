@@ -18,9 +18,9 @@ func NewStagesStorageCacheHttpHandler(ctx context.Context, stagesStorageCache st
 	}
 	handler.HandleFunc("/get-all-stages", handler.handleGetAllStages(ctx))
 	handler.HandleFunc("/delete-all-stages", handler.handleDeleteAllStages(ctx))
-	handler.HandleFunc("/get-stages-by-signature", handler.handleGetStagesBySignature(ctx))
-	handler.HandleFunc("/store-stages-by-signature", handler.handleStoreStagesBySignature(ctx))
-	handler.HandleFunc("/delete-stages-by-signature", handler.handleDeleteStagesBySignature(ctx))
+	handler.HandleFunc("/get-stages-by-dependenciesDigest", handler.handleGetStagesByDependenciesDigest(ctx))
+	handler.HandleFunc("/store-stages-by-dependenciesDigest", handler.handleStoreStagesByDependenciesDigest(ctx))
+	handler.HandleFunc("/delete-stages-by-dependenciesDigest", handler.handleDeleteStagesByDependenciesDigest(ctx))
 
 	return handler
 }
@@ -70,65 +70,65 @@ func (handler *StagesStorageCacheHttpHandler) handleDeleteAllStages(ctx context.
 	}
 }
 
-type GetStagesBySignatureRequest struct {
+type GetStagesByDependenciesDigestRequest struct {
 	ProjectName string `json:"projectName"`
-	Signature   string `json:"signature"`
+	DependenciesDigest   string `json:"dependenciesDigest"`
 }
-type GetStagesBySignatureResponse struct {
+type GetStagesByDependenciesDigestResponse struct {
 	Err    util.SerializableError `json:"err"`
 	Found  bool                   `json:"found"`
 	Stages []image.StageID        `json:"stages"`
 }
 
-func (handler *StagesStorageCacheHttpHandler) handleGetStagesBySignature(ctx context.Context) func(w http.ResponseWriter, r *http.Request) {
+func (handler *StagesStorageCacheHttpHandler) handleGetStagesByDependenciesDigest(ctx context.Context) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var request GetStagesBySignatureRequest
-		var response GetStagesBySignatureResponse
+		var request GetStagesByDependenciesDigestRequest
+		var response GetStagesByDependenciesDigestResponse
 		HandleRequest(w, r, &request, &response, func() {
-			logboek.Context(ctx).Debug().LogF("StagesStorageCacheHttpHandler -- GetStagesBySignature request %#v\n", request)
-			response.Found, response.Stages, response.Err.Error = handler.StagesStorageCache.GetStagesBySignature(ctx, request.ProjectName, request.Signature)
-			logboek.Context(ctx).Debug().LogF("StagesStorageCacheHttpHandler -- GetStagesBySignature response %#v\n", response)
+			logboek.Context(ctx).Debug().LogF("StagesStorageCacheHttpHandler -- GetStagesByDependenciesDigest request %#v\n", request)
+			response.Found, response.Stages, response.Err.Error = handler.StagesStorageCache.GetStagesByDependenciesDigest(ctx, request.ProjectName, request.DependenciesDigest)
+			logboek.Context(ctx).Debug().LogF("StagesStorageCacheHttpHandler -- GetStagesByDependenciesDigest response %#v\n", response)
 		})
 	}
 }
 
-type StoreStagesBySignatureRequest struct {
+type StoreStagesByDependenciesDigestRequest struct {
 	ProjectName string          `json:"projectName"`
-	Signature   string          `json:"signature"`
+	DependenciesDigest   string          `json:"dependenciesDigest"`
 	Stages      []image.StageID `json:"stages"`
 }
-type StoreStagesBySignatureResponse struct {
+type StoreStagesByDependenciesDigestResponse struct {
 	Err util.SerializableError `json:"err"`
 }
 
-func (handler *StagesStorageCacheHttpHandler) handleStoreStagesBySignature(ctx context.Context) func(w http.ResponseWriter, r *http.Request) {
+func (handler *StagesStorageCacheHttpHandler) handleStoreStagesByDependenciesDigest(ctx context.Context) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var request StoreStagesBySignatureRequest
-		var response StoreStagesBySignatureResponse
+		var request StoreStagesByDependenciesDigestRequest
+		var response StoreStagesByDependenciesDigestResponse
 		HandleRequest(w, r, &request, &response, func() {
-			logboek.Context(ctx).Debug().LogF("StagesStorageCacheHttpHandler -- StoreStagesBySignature request %#v\n", request)
-			response.Err.Error = handler.StagesStorageCache.StoreStagesBySignature(ctx, request.ProjectName, request.Signature, request.Stages)
-			logboek.Context(ctx).Debug().LogF("StagesStorageCacheHttpHandler -- StoreStagesBySignature response %#v\n", response)
+			logboek.Context(ctx).Debug().LogF("StagesStorageCacheHttpHandler -- StoreStagesByDependenciesDigest request %#v\n", request)
+			response.Err.Error = handler.StagesStorageCache.StoreStagesByDependenciesDigest(ctx, request.ProjectName, request.DependenciesDigest, request.Stages)
+			logboek.Context(ctx).Debug().LogF("StagesStorageCacheHttpHandler -- StoreStagesByDependenciesDigest response %#v\n", response)
 		})
 	}
 }
 
-type DeleteStagesBySignatureRequest struct {
+type DeleteStagesByDependenciesDigestRequest struct {
 	ProjectName string `json:"projectName"`
-	Signature   string `json:"signature"`
+	DependenciesDigest   string `json:"dependenciesDigest"`
 }
-type DeleteStagesBySignatureResponse struct {
+type DeleteStagesByDependenciesDigestResponse struct {
 	Err util.SerializableError `json:"err"`
 }
 
-func (handler *StagesStorageCacheHttpHandler) handleDeleteStagesBySignature(ctx context.Context) func(w http.ResponseWriter, r *http.Request) {
+func (handler *StagesStorageCacheHttpHandler) handleDeleteStagesByDependenciesDigest(ctx context.Context) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var request DeleteStagesBySignatureRequest
-		var response DeleteStagesBySignatureResponse
+		var request DeleteStagesByDependenciesDigestRequest
+		var response DeleteStagesByDependenciesDigestResponse
 		HandleRequest(w, r, &request, &response, func() {
-			logboek.Context(ctx).Debug().LogF("StagesStorageCacheHttpHandler -- DeleteStagesBySignature request %#v\n", request)
-			response.Err.Error = handler.StagesStorageCache.DeleteStagesBySignature(ctx, request.ProjectName, request.Signature)
-			logboek.Context(ctx).Debug().LogF("StagesStorageCacheHttpHandler -- DeleteStagesBySignature response %#v\n", response)
+			logboek.Context(ctx).Debug().LogF("StagesStorageCacheHttpHandler -- DeleteStagesByDependenciesDigest request %#v\n", request)
+			response.Err.Error = handler.StagesStorageCache.DeleteStagesByDependenciesDigest(ctx, request.ProjectName, request.DependenciesDigest)
+			logboek.Context(ctx).Debug().LogF("StagesStorageCacheHttpHandler -- DeleteStagesByDependenciesDigest response %#v\n", response)
 		})
 	}
 }

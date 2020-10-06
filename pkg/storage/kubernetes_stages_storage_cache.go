@@ -38,7 +38,7 @@ type KubernetesStagesStorageCache struct {
 }
 
 type KubernetesStagesStorageCacheData struct {
-	StagesBySignature map[string][]image.StageID `json:"stagesBySignature"`
+	StagesByDependenciesDigest map[string][]image.StageID `json:"stagesByDependenciesDigest"`
 }
 
 func (cache *KubernetesStagesStorageCache) String() string {
@@ -92,8 +92,8 @@ func (cache *KubernetesStagesStorageCache) GetAllStages(ctx context.Context, pro
 		return false, nil, err
 	} else if cacheData != nil {
 		var res []image.StageID
-		for _, stagesBySignature := range cacheData.StagesBySignature {
-			res = append(res, stagesBySignature...)
+		for _, stagesByDependenciesDigest := range cacheData.StagesByDependenciesDigest {
+			res = append(res, stagesByDependenciesDigest...)
 		}
 		return true, res, nil
 	}
@@ -107,13 +107,13 @@ func (cache *KubernetesStagesStorageCache) DeleteAllStages(ctx context.Context, 
 	})
 }
 
-func (cache *KubernetesStagesStorageCache) GetStagesBySignature(ctx context.Context, projectName, signature string) (bool, []image.StageID, error) {
+func (cache *KubernetesStagesStorageCache) GetStagesByDependenciesDigest(ctx context.Context, projectName, dependenciesDigest string) (bool, []image.StageID, error) {
 	if obj, err := kubeutils.GetOrCreateConfigMapWithNamespaceIfNotExists(cache.KubeClient, cache.Namespace, cache.GetConfigMapNameFunc(projectName)); err != nil {
 		return false, nil, err
 	} else if cacheData, err := cache.extractCacheData(ctx, obj); err != nil {
 		return false, nil, err
 	} else if cacheData != nil {
-		if stages, hasKey := cacheData.StagesBySignature[signature]; hasKey {
+		if stages, hasKey := cacheData.StagesByDependenciesDigest[dependenciesDigest]; hasKey {
 			return true, stages, nil
 		}
 		return false, nil, nil
@@ -121,23 +121,23 @@ func (cache *KubernetesStagesStorageCache) GetStagesBySignature(ctx context.Cont
 	return false, nil, nil
 }
 
-func (cache *KubernetesStagesStorageCache) StoreStagesBySignature(ctx context.Context, projectName, signature string, stages []image.StageID) error {
+func (cache *KubernetesStagesStorageCache) StoreStagesByDependenciesDigest(ctx context.Context, projectName, dependenciesDigest string, stages []image.StageID) error {
 	return cache.changeCacheData(ctx, projectName, func(obj *v1.ConfigMap, cacheData *KubernetesStagesStorageCacheData) error {
 		if cacheData == nil {
 			cacheData = &KubernetesStagesStorageCacheData{
-				StagesBySignature: make(map[string][]image.StageID),
+				StagesByDependenciesDigest: make(map[string][]image.StageID),
 			}
 		}
-		cacheData.StagesBySignature[signature] = stages
+		cacheData.StagesByDependenciesDigest[dependenciesDigest] = stages
 		cache.setCacheData(obj, cacheData)
 		return nil
 	})
 }
 
-func (cache *KubernetesStagesStorageCache) DeleteStagesBySignature(ctx context.Context, projectName, signature string) error {
+func (cache *KubernetesStagesStorageCache) DeleteStagesByDependenciesDigest(ctx context.Context, projectName, dependenciesDigest string) error {
 	return cache.changeCacheData(ctx, projectName, func(obj *v1.ConfigMap, cacheData *KubernetesStagesStorageCacheData) error {
 		if cacheData != nil {
-			delete(cacheData.StagesBySignature, signature)
+			delete(cacheData.StagesByDependenciesDigest, dependenciesDigest)
 			cache.setCacheData(obj, cacheData)
 		}
 		return nil

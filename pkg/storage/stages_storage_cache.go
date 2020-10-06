@@ -9,9 +9,9 @@ import (
 type StagesStorageCache interface {
 	GetAllStages(ctx context.Context, projectName string) (bool, []image.StageID, error)
 	DeleteAllStages(ctx context.Context, projectName string) error
-	GetStagesBySignature(ctx context.Context, projectName, signature string) (bool, []image.StageID, error)
-	StoreStagesBySignature(ctx context.Context, projectName, signature string, stages []image.StageID) error
-	DeleteStagesBySignature(ctx context.Context, projectName, signature string) error
+	GetStagesByDependenciesDigest(ctx context.Context, projectName, dependenciesDigest string) (bool, []image.StageID, error)
+	StoreStagesByDependenciesDigest(ctx context.Context, projectName, dependenciesDigest string, stages []image.StageID) error
+	DeleteStagesByDependenciesDigest(ctx context.Context, projectName, dependenciesDigest string) error
 
 	String() string
 }

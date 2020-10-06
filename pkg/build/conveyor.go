@@ -74,7 +74,7 @@ type Conveyor struct {
 
 	mutex               sync.Mutex
 	serviceRWMutex      map[string]*sync.RWMutex
-	stageSignatureMutex map[string]*sync.Mutex
+	stageDependenciesDigestMutex map[string]*sync.Mutex
 }
 
 type ConveyorOptions struct {
@@ -113,7 +113,7 @@ func NewConveyor(werfConfig *config.WerfConfig, imageNamesToProcess []string, pr
 		ConveyorOptions: opts,
 
 		serviceRWMutex:      map[string]*sync.RWMutex{},
-		stageSignatureMutex: map[string]*sync.Mutex{},
+		stageDependenciesDigestMutex: map[string]*sync.Mutex{},
 	}
 
 	return c, c.Init()
@@ -176,14 +176,14 @@ func (c *Conveyor) SetBaseImagesRepoErrCache(key string, err error) {
 	c.baseImagesRepoErrCache[key] = err
 }
 
-func (c *Conveyor) GetStageSignatureMutex(stage string) *sync.Mutex {
+func (c *Conveyor) GetStageDependenciesDigestMutex(stage string) *sync.Mutex {
 	c.mutex.Lock()
 	defer c.mutex.Unlock()
 
-	m, ok := c.stageSignatureMutex[stage]
+	m, ok := c.stageDependenciesDigestMutex[stage]
 	if !ok {
 		m = &sync.Mutex{}
-		c.stageSignatureMutex[stage] = m
+		c.stageDependenciesDigestMutex[stage] = m
 	}
 
 	return m

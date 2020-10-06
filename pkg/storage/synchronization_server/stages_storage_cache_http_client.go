@@ -42,28 +42,28 @@ func (client *StagesStorageCacheHttpClient) DeleteAllStages(_ context.Context, p
 	return response.Err.Error
 }
 
-func (client *StagesStorageCacheHttpClient) GetStagesBySignature(_ context.Context, projectName, signature string) (bool, []image.StageID, error) {
-	var request = GetStagesBySignatureRequest{projectName, signature}
-	var response GetStagesBySignatureResponse
-	if err := PerformPost(client.HttpClient, fmt.Sprintf("%s/%s", client.URL, "get-stages-by-signature"), request, &response); err != nil {
+func (client *StagesStorageCacheHttpClient) GetStagesByDependenciesDigest(_ context.Context, projectName, dependenciesDigest string) (bool, []image.StageID, error) {
+	var request = GetStagesByDependenciesDigestRequest{projectName, dependenciesDigest}
+	var response GetStagesByDependenciesDigestResponse
+	if err := PerformPost(client.HttpClient, fmt.Sprintf("%s/%s", client.URL, "get-stages-by-dependenciesDigest"), request, &response); err != nil {
 		return false, nil, err
 	}
 	return response.Found, response.Stages, response.Err.Error
 }
 
-func (client *StagesStorageCacheHttpClient) StoreStagesBySignature(_ context.Context, projectName, signature string, stages []image.StageID) error {
-	var request = StoreStagesBySignatureRequest{projectName, signature, stages}
-	var response StoreStagesBySignatureResponse
-	if err := PerformPost(client.HttpClient, fmt.Sprintf("%s/%s", client.URL, "store-stages-by-signature"), request, &response); err != nil {
+func (client *StagesStorageCacheHttpClient) StoreStagesByDependenciesDigest(_ context.Context, projectName, dependenciesDigest string, stages []image.StageID) error {
+	var request = StoreStagesByDependenciesDigestRequest{projectName, dependenciesDigest, stages}
+	var response StoreStagesByDependenciesDigestResponse
+	if err := PerformPost(client.HttpClient, fmt.Sprintf("%s/%s", client.URL, "store-stages-by-dependenciesDigest"), request, &response); err != nil {
 		return err
 	}
 	return response.Err.Error
 }
 
-func (client *StagesStorageCacheHttpClient) DeleteStagesBySignature(_ context.Context, projectName, signature string) error {
-	var request = DeleteStagesBySignatureRequest{projectName, signature}
-	var response DeleteStagesBySignatureResponse
-	if err := PerformPost(client.HttpClient, fmt.Sprintf("%s/%s", client.URL, "delete-stages-by-signature"), request, &response); err != nil {
+func (client *StagesStorageCacheHttpClient) DeleteStagesByDependenciesDigest(_ context.Context, projectName, dependenciesDigest string) error {
+	var request = DeleteStagesByDependenciesDigestRequest{projectName, dependenciesDigest}
+	var response DeleteStagesByDependenciesDigestResponse
+	if err := PerformPost(client.HttpClient, fmt.Sprintf("%s/%s", client.URL, "delete-stages-by-dependenciesDigest"), request, &response); err != nil {
 		return err
 	}
 	return response.Err.Error
