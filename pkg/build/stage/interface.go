@@ -24,8 +24,8 @@ type Interface interface {
 	SetSignature(signature string)
 	GetSignature() string
 
-	SetContentSignature(contentSignature string)
-	GetContentSignature() string
+	SetDigest(digest string)
+	GetDigest() string
 
 	SetImage(container_runtime.ImageInterface)
 	GetImage() container_runtime.ImageInterface

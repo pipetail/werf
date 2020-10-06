@@ -668,12 +668,12 @@ func (c *Conveyor) GetImage(name string) *Image {
 	panic(fmt.Sprintf("Image '%s' not found!", name))
 }
 
-func (c *Conveyor) GetImageStageContentSignature(imageName, stageName string) string {
-	return c.getImageStage(imageName, stageName).GetContentSignature()
+func (c *Conveyor) GetImageStageDigest(imageName, stageName string) string {
+	return c.getImageStage(imageName, stageName).GetDigest()
 }
 
-func (c *Conveyor) GetImageContentSignature(imageName string) string {
-	return c.GetImage(imageName).GetContentSignature()
+func (c *Conveyor) GetImageDigest(imageName string) string {
+	return c.GetImage(imageName).GetDigest()
 }
 
 func (c *Conveyor) getImageStage(imageName, stageName string) stage.Interface {

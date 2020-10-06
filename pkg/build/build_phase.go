@@ -154,7 +154,7 @@ func (phase *BuildPhase) BeforeImageStages(_ context.Context, img *Image) error 
 
 func (phase *BuildPhase) AfterImageStages(ctx context.Context, img *Image) error {
 	img.SetLastNonEmptyStage(phase.StagesIterator.PrevNonEmptyStage)
-	img.SetContentSignature(phase.StagesIterator.PrevNonEmptyStage.GetContentSignature())
+	img.SetDigest(phase.StagesIterator.PrevNonEmptyStage.GetDigest())
 
 	if img.isArtifact {
 		return nil
@@ -363,11 +363,11 @@ func (phase *BuildPhase) calculateStage(ctx context.Context, img *Image, stg sta
 
 	stageContentSig, err := calculateSignature(ctx, fmt.Sprintf("%s-content", stg.Name()), "", stg, phase.Conveyor)
 	if err != nil {
-		return fmt.Errorf("unable to calculate stage %s content signature: %s", stg.Name(), err)
+		return fmt.Errorf("unable to calculate stage %s digest: %s", stg.Name(), err)
 	}
-	stg.SetContentSignature(stageContentSig)
+	stg.SetDigest(stageContentSig)
 
-	logboek.Context(ctx).Info().LogF("Stage %s content signature: %s\n", stg.LogDetailedName(), stageContentSig)
+	logboek.Context(ctx).Info().LogF("Stage %s digest: %s\n", stg.LogDetailedName(), stageContentSig)
 
 	return nil
 }
@@ -384,7 +384,7 @@ func (phase *BuildPhase) prepareStageInstructions(ctx context.Context, img *Imag
 		imagePkg.WerfCacheVersionLabel:          imagePkg.BuildCacheVersion,
 		imagePkg.WerfImageLabel:                 "false",
 		imagePkg.WerfStageSignatureLabel:        stg.GetSignature(),
-		imagePkg.WerfStageContentSignatureLabel: stg.GetContentSignature(),
+		imagePkg.WerfStageDigestLabel: stg.GetDigest(),
 	}
 
 	switch stg.(type) {

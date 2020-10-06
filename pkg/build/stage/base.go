@@ -83,7 +83,7 @@ type BaseStage struct {
 	name             StageName
 	imageName        string
 	signature        string
-	contentSignature string
+	digest string
 	image            container_runtime.ImageInterface
 	gitMappings      []*GitMapping
 	imageTmpDir      string
@@ -435,12 +435,12 @@ func (s *BaseStage) GetSignature() string {
 	return s.signature
 }
 
-func (s *BaseStage) SetContentSignature(contentSignature string) {
-	s.contentSignature = contentSignature
+func (s *BaseStage) SetDigest(digest string) {
+	s.digest = digest
 }
 
-func (s *BaseStage) GetContentSignature() string {
-	return s.contentSignature
+func (s *BaseStage) GetDigest() string {
+	return s.digest
 }
 
 func (s *BaseStage) SetImage(image container_runtime.ImageInterface) {

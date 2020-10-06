@@ -33,7 +33,7 @@ type Image struct {
 
 	stages            []stage.Interface
 	lastNonEmptyStage stage.Interface
-	contentSignature  string
+	digest  string
 	isArtifact        bool
 	isDockerfileImage bool
 
@@ -93,12 +93,12 @@ func (i *Image) GetLastNonEmptyStage() stage.Interface {
 	return i.lastNonEmptyStage
 }
 
-func (i *Image) SetContentSignature(sig string) {
-	i.contentSignature = sig
+func (i *Image) SetDigest(sig string) {
+	i.digest = sig
 }
 
-func (i *Image) GetContentSignature() string {
-	return i.contentSignature
+func (i *Image) GetDigest() string {
+	return i.digest
 }
 
 func (i *Image) GetStage(name stage.StageName) stage.Interface {

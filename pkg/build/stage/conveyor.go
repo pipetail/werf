@@ -7,8 +7,8 @@ import (
 )
 
 type Conveyor interface {
-	GetImageStageContentSignature(imageName, stageName string) string
-	GetImageContentSignature(imageName string) string
+	GetImageStageDigest(imageName, stageName string) string
+	GetImageDigest(imageName string) string
 
 	GetImageNameForLastImageStage(imageName string) string
 	GetImageIDForLastImageStage(imageName string) string

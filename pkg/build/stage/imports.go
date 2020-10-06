@@ -54,9 +54,9 @@ func (s *ImportsStage) GetDependencies(_ context.Context, c Conveyor, _, _ conta
 		}
 
 		if elm.Stage == "" {
-			args = append(args, c.GetImageContentSignature(imgName))
+			args = append(args, c.GetImageDigest(imgName))
 		} else {
-			args = append(args, c.GetImageStageContentSignature(imgName, elm.Stage))
+			args = append(args, c.GetImageStageDigest(imgName, elm.Stage))
 		}
 
 		args = append(args, elm.Add, elm.To)

@@ -58,7 +58,7 @@ func (rec *ClientIDRecord) String() string {
 }
 
 type ImageMetadata struct {
-	ContentSignature string
+	Digest string
 }
 
 type StagesStorageOptions struct {
