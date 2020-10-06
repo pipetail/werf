@@ -45,7 +45,7 @@ func (client *StagesStorageCacheHttpClient) DeleteAllStages(_ context.Context, p
 func (client *StagesStorageCacheHttpClient) GetStagesByDependenciesDigest(_ context.Context, projectName, dependenciesDigest string) (bool, []image.StageID, error) {
 	var request = GetStagesByDependenciesDigestRequest{projectName, dependenciesDigest}
 	var response GetStagesByDependenciesDigestResponse
-	if err := PerformPost(client.HttpClient, fmt.Sprintf("%s/%s", client.URL, "get-stages-by-dependenciesDigest"), request, &response); err != nil {
+	if err := PerformPost(client.HttpClient, fmt.Sprintf("%s/%s", client.URL, "get-stages-by-signature"), request, &response); err != nil {
 		return false, nil, err
 	}
 	return response.Found, response.Stages, response.Err.Error
@@ -54,7 +54,7 @@ func (client *StagesStorageCacheHttpClient) GetStagesByDependenciesDigest(_ cont
 func (client *StagesStorageCacheHttpClient) StoreStagesByDependenciesDigest(_ context.Context, projectName, dependenciesDigest string, stages []image.StageID) error {
 	var request = StoreStagesByDependenciesDigestRequest{projectName, dependenciesDigest, stages}
 	var response StoreStagesByDependenciesDigestResponse
-	if err := PerformPost(client.HttpClient, fmt.Sprintf("%s/%s", client.URL, "store-stages-by-dependenciesDigest"), request, &response); err != nil {
+	if err := PerformPost(client.HttpClient, fmt.Sprintf("%s/%s", client.URL, "store-stages-by-signature"), request, &response); err != nil {
 		return err
 	}
 	return response.Err.Error
@@ -63,7 +63,7 @@ func (client *StagesStorageCacheHttpClient) StoreStagesByDependenciesDigest(_ co
 func (client *StagesStorageCacheHttpClient) DeleteStagesByDependenciesDigest(_ context.Context, projectName, dependenciesDigest string) error {
 	var request = DeleteStagesByDependenciesDigestRequest{projectName, dependenciesDigest}
 	var response DeleteStagesByDependenciesDigestResponse
-	if err := PerformPost(client.HttpClient, fmt.Sprintf("%s/%s", client.URL, "delete-stages-by-dependenciesDigest"), request, &response); err != nil {
+	if err := PerformPost(client.HttpClient, fmt.Sprintf("%s/%s", client.URL, "delete-stages-by-signature"), request, &response); err != nil {
 		return err
 	}
 	return response.Err.Error

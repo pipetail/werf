@@ -7,7 +7,7 @@ const (
 	WerfImageLabel                 = "werf-image"
 	WerfImageNameLabel             = "werf-image-name"
 	WerfDockerImageName            = "werf-docker-image-name"
-	WerfStageDependenciesDigestLabel        = "werf-stage-dependenciesDigest"
+	WerfStageDependenciesDigestLabel        = "werf-stage-dependencies-digest"
 	WerfStageDigestLabel = "werf-stage-digest"
 	WerfProjectRepoCommitLabel     = "werf-project-repo-commit"
 	WerfDigestLabel      = "werf-digest"

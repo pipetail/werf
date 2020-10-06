@@ -18,9 +18,9 @@ func NewStagesStorageCacheHttpHandler(ctx context.Context, stagesStorageCache st
 	}
 	handler.HandleFunc("/get-all-stages", handler.handleGetAllStages(ctx))
 	handler.HandleFunc("/delete-all-stages", handler.handleDeleteAllStages(ctx))
-	handler.HandleFunc("/get-stages-by-dependenciesDigest", handler.handleGetStagesByDependenciesDigest(ctx))
-	handler.HandleFunc("/store-stages-by-dependenciesDigest", handler.handleStoreStagesByDependenciesDigest(ctx))
-	handler.HandleFunc("/delete-stages-by-dependenciesDigest", handler.handleDeleteStagesByDependenciesDigest(ctx))
+	handler.HandleFunc("/get-stages-by-signature", handler.handleGetStagesByDependenciesDigest(ctx))
+	handler.HandleFunc("/store-stages-by-signature", handler.handleStoreStagesByDependenciesDigest(ctx))
+	handler.HandleFunc("/delete-stages-by-signature", handler.handleDeleteStagesByDependenciesDigest(ctx))
 
 	return handler
 }
